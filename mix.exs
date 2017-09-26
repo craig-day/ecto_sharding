@@ -14,15 +14,13 @@ defmodule Ecto.Sharding.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
-      mod: {Ecto.Sharding.Application, []}
+      extra_applications: [:logger]
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:mariaex, ">= 0.0.0"},
       {:ecto, "~> 2.1"}
     ]
   end

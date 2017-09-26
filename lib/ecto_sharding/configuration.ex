@@ -2,13 +2,14 @@ defmodule Ecto.Sharding.Configuration do
   @moduledoc """
 
   """
-  @otp_app :ecto_sharding |> Application.get_env(__MODULE__) |> Keyword.fetch!(:otp_app)
+  @otp_app :ecto_sharding |> Application.get_env(Ecto.Sharding) |> Keyword.fetch!(:otp_app)
 
-  def initial_repos do
+  def shard_repos do
     :ecto_sharding
-    |> Application.get_env(__MODULE__)
-    |> Map.get(:shards)
+    |> Application.get_env(Ecto.Sharding)
+    |> Keyword.fetch!(:shards)
     |> Enum.map(&create_ecto_repos/1)
+    |> Enum.into(%{})
   end
 
   defp create_ecto_repos({shard, config}) do
@@ -23,7 +24,7 @@ defmodule Ecto.Sharding.Configuration do
 
   defp repo_contents do
     quote do
-      use Ecto.Repo, otp_app: @otp_app
+      use Ecto.Repo, otp_app: unquote(@otp_app)
     end
   end
 end

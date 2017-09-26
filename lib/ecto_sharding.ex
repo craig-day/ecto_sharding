@@ -2,17 +2,34 @@ defmodule Ecto.Sharding do
   @moduledoc """
   Documentation for Ecto.Sharding.
   """
+  use Supervisor
 
-  @doc """
-  Hello world.
+  def current_shard(shard) do
+    Ecto.Sharding.ShardRegistry.current_shard(shard)
+  end
 
-  ## Examples
+  def start_link do
+    Supervisor.start_link(__MODULE__, :ok, [])
+  end
 
-      iex> Ecto.Sharding.hello
-      :world
+  def init(:ok) do
+    shard_repos = Ecto.Sharding.Configuration.shard_repos
 
-  """
-  def hello do
-    :world
+    children =
+      own_children(shard_repos)
+      |> Enum.concat(shard_children(shard_repos))
+
+    Supervisor.init(children, strategy: :one_for_one)
+  end
+
+  defp own_children(shard_repos) do
+    [
+      {Ecto.Sharding.ShardRegistry, [shard_repos: shard_repos]}
+    ]
+  end
+
+  defp shard_children(shard_repos) do
+    shard_repos
+    |> Enum.map(fn({_shard, module}) -> supervisor(module, []) end)
   end
 end
