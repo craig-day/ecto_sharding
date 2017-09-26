@@ -67,6 +67,15 @@ TODO
       }
     ```
 
+1. Start `Ecto.Sharding` as a supervised process
+
+When the supervisor starts up, it will expect all of its configuration to be there,
+so make sure any config is set before `start_link` is called.
+
+```elixir
+supervisor(Ecto.Sharding, [])
+```
+
 1. `use Ecto.Sharding.Repo` instead of `Ecto.Repo`
 
     In any repos you have defined in your app, change any calls to
