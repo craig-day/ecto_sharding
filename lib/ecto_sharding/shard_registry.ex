@@ -20,6 +20,10 @@ defmodule Ecto.Sharding.ShardRegistry do
     GenServer.call(:shard_registry, :current_repo)
   end
 
+  def repo_for_shard(shard) do
+    GenServer.call(:shard_registry, {:for_shard, shard})
+  end
+
   def init(shard_repos) do
     initial_state = {nil, shard_repos}
     {:ok, initial_state}
@@ -33,6 +37,10 @@ defmodule Ecto.Sharding.ShardRegistry do
 
   def handle_call(:current_repo, _from, {current_shard, shards} = state) do
     {:reply, Map.get(shards, current_shard), state}
+  end
+
+  def handle_call({:for_shard, shard}, _from, {_, shards} = state) do
+    {:reply, Map.get(shards, shard), state}
   end
 
   def handle_call(request, from, state), do: super(request, from, state)
