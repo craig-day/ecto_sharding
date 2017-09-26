@@ -19,7 +19,6 @@ defmodule Ecto.Sharding.Repo do
           super(queryable, opts)
         end
       end
-        # do: select_repo(queryable).all(queryable, opts)
 
       @doc """
       The same as `Ecto.Repo.stream/2` but it will inspect the query and go to a shard if necessary.

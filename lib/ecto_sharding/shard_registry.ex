@@ -8,10 +8,6 @@ defmodule Ecto.Sharding.ShardRegistry do
     GenServer.start_link(__MODULE__, shard_repos, name: :shard_registry)
   end
 
-  def register_repo(shard, repo) do
-    GenServer.cast(:shard_registry, {:register, shard, repo})
-  end
-
   def current_shard do
     GenServer.call(:shard_registry, :current_shard)
   end

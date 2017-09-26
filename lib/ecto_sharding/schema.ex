@@ -5,7 +5,7 @@ defmodule Ecto.Sharding.Schema do
     quote do
       use Ecto.Schema
 
-      def sharded?, do: !!unquote(sharded)
+      def sharded?, do: unquote(sharded)
     end
   end
 end
