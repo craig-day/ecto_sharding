@@ -1,29 +1,32 @@
 defmodule Ecto.Sharding.Repo do
+  defmodule QueryForwarding do
+    alias Ecto.Sharding.ShardRegistry
+
+    defmacro forward_query(method, args) do
+      quote do
+        %Ecto.Query{from: {_s, model}} = List.first(unquote(args))
+
+        if model.sharded? do
+          apply(ShardRegistry.current_repo, unquote(method), unquote(args))
+        else
+          apply(__MODULE__, :super, unquote(args))
+        end
+      end
+    end
+  end
+
   defmacro __using__(opts) do
     quote do
+      import QueryForwarding, only: [forward_query: 2]
       use Ecto.Repo, unquote(opts)
       alias Ecto.Sharding.ShardRegistry
 
       defoverridable Ecto.Repo
 
-      @doc """
-      The same as `Ecto.Repo.all/2` but it will inspect the query and go to a shard if necessary.
-      """
-      @spec all(Ecto.Queryable.t, Keyword.t) :: [Ecto.Schema.t] | no_return
       def all(queryable, opts \\ []) do
-        %Ecto.Query{from: {_s, model}} = queryable
-
-        if model.sharded? do
-          ShardRegistry.current_repo.all(queryable, opts)
-        else
-          super(queryable, opts)
-        end
+        forward_query(:all, [queryable, opts])
       end
 
-      @doc """
-      The same as `Ecto.Repo.stream/2` but it will inspect the query and go to a shard if necessary.
-      """
-      @spec all(Ecto.Queryable.t, Keyword.t) :: Enum.t
       def stream(queryable, opts \\ []) do
         %Ecto.Query{from: {_s, model}} = queryable
 
@@ -34,10 +37,6 @@ defmodule Ecto.Sharding.Repo do
         end
       end
 
-      @doc """
-      The same as `Ecto.Repo.get/3` but it will inspect the query and go to a shard if necessary.
-      """
-      @spec get(Ecto.Queryable.t, term, Keyword.t) :: Ecto.Schema.t | nil | no_return
       def get(queryable, id, opts \\ []) do
         %Ecto.Query{from: {_s, model}} = queryable
 
@@ -48,10 +47,6 @@ defmodule Ecto.Sharding.Repo do
         end
       end
 
-      @doc """
-      The same as `Ecto.Repo.get!/3` but it will inspect the query and go to a shard if necessary.
-      """
-      @spec get!(Ecto.Queryable.t, term, Keyword.t) :: Ecto.Schema.t | nil | no_return
       def get!(queryable, id, opts \\ []) do
         %Ecto.Query{from: {_s, model}} = queryable
 
@@ -62,10 +57,6 @@ defmodule Ecto.Sharding.Repo do
         end
       end
 
-      @doc """
-      The same as `Ecto.Repo.get_by/3` but it will inspect the query and go to a shard if necessary.
-      """
-      @spec get_by(Ecto.Queryable.t, Keyword.t | map, Keyword.t) :: Ecto.Schema.t | nil | no_return
       def get_by(queryable, clauses, opts \\ []) do
         %Ecto.Query{from: {_s, model}} = queryable
 
@@ -76,10 +67,6 @@ defmodule Ecto.Sharding.Repo do
         end
       end
 
-      @doc """
-      The same as `Ecto.Repo.get_by!/3` but it will inspect the query and go to a shard if necessary.
-      """
-      @spec get_by!(Ecto.Queryable.t, Keyword.t | map, Keyword.t) :: Ecto.Schema.t | nil | no_return
       def get_by!(queryable, clauses, opts \\ []) do
         %Ecto.Query{from: {_s, model}} = queryable
 
@@ -90,10 +77,6 @@ defmodule Ecto.Sharding.Repo do
         end
       end
 
-      @doc """
-      The same as `Ecto.Repo.one/2` but it will inspect the query and go to a shard if necessary.
-      """
-      @spec one(Ecto.Queryable.t, Keyword.t) :: Ecto.Schema.t | nil | no_return
       def one(queryable, opts \\ []) do
         %Ecto.Query{from: {_s, model}} = queryable
 
@@ -104,10 +87,6 @@ defmodule Ecto.Sharding.Repo do
         end
       end
 
-      @doc """
-      The same as `Ecto.Repo.one!/2` but it will inspect the query and go to a shard if necessary.
-      """
-      @spec one!(Ecto.Queryable.t, Keyword.t) :: Ecto.Schema.t | no_return
       def one!(queryable, opts \\ []) do
         %Ecto.Query{from: {_s, model}} = queryable
 
@@ -118,10 +97,6 @@ defmodule Ecto.Sharding.Repo do
         end
       end
 
-      @doc """
-      The same as `Ecto.Repo.aggregate/4` but it will inspect the query and go to a shard if necessary.
-      """
-      @spec aggregate(Ecto.Queryable.t, :count | :avg | :max | :min | :sum, atom, Keyword.t) :: term | nil
       def aggregate(queryable, aggregate, field, opts \\ [])
           when aggregate in [:count, :avg, :max, :min, :sum] and is_atom(field) do
         %Ecto.Query{from: {_s, model}} = queryable
@@ -133,10 +108,6 @@ defmodule Ecto.Sharding.Repo do
         end
       end
 
-      @doc """
-      The same as `Ecto.Repo.preload/3` but it will inspect the query and go to a shard if necessary.
-      """
-      @spec preload(Ecto.Queryable.t, List.t, Keyword.t) :: Ecto.Schema.t
       def preload(queryable, preloads, opts \\ []) do
         %Ecto.Query{from: {_s, model}} = queryable
 
@@ -146,6 +117,58 @@ defmodule Ecto.Sharding.Repo do
           super(queryable, preloads, opts)
         end
       end
+
+      # def insert_all(schema_or_source, entries, opts \\ []) do
+      #   Ecto.Repo.Schema.insert_all(__MODULE__, @adapter, schema_or_source, entries, opts)
+      # end
+
+      # def update_all(queryable, updates, opts \\ []) do
+      #   Ecto.Repo.Queryable.update_all(__MODULE__, @adapter, queryable, updates, opts)
+      # end
+
+      # def delete_all(queryable, opts \\ []) do
+      #   Ecto.Repo.Queryable.delete_all(__MODULE__, @adapter, queryable, opts)
+      # end
+
+      # def insert(struct, opts \\ []) do
+      #   Ecto.Repo.Schema.insert(__MODULE__, @adapter, struct, opts)
+      # end
+
+      # def update(struct, opts \\ []) do
+      #   Ecto.Repo.Schema.update(__MODULE__, @adapter, struct, opts)
+      # end
+
+      # def insert_or_update(changeset, opts \\ []) do
+      #   Ecto.Repo.Schema.insert_or_update(__MODULE__, @adapter, changeset, opts)
+      # end
+
+      # def delete(struct, opts \\ []) do
+      #   Ecto.Repo.Schema.delete(__MODULE__, @adapter, struct, opts)
+      # end
+
+      # def insert!(struct, opts \\ []) do
+      #   Ecto.Repo.Schema.insert!(__MODULE__, @adapter, struct, opts)
+      # end
+
+      # def update!(struct, opts \\ []) do
+      #   Ecto.Repo.Schema.update!(__MODULE__, @adapter, struct, opts)
+      # end
+
+      # def insert_or_update!(changeset, opts \\ []) do
+      #   Ecto.Repo.Schema.insert_or_update!(__MODULE__, @adapter, changeset, opts)
+      # end
+
+      # def delete!(struct, opts \\ []) do
+      #   Ecto.Repo.Schema.delete!(__MODULE__, @adapter, struct, opts)
+      # end
+
+      # def preload(struct_or_structs_or_nil, preloads, opts \\ []) do
+      #   Ecto.Repo.Preloader.preload(struct_or_structs_or_nil, __MODULE__, preloads, opts)
+      # end
+
+      # def load(schema_or_types, data) do
+      #   Ecto.Repo.Schema.load(@adapter, schema_or_types, data)
+      # end
     end
   end
 end
