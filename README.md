@@ -18,9 +18,9 @@ TODO
 
 ### Configuration
 
-1. Configure your apps `Ecto.Repo`
+1. Configure your app's `Ecto.Repo`
 
-    This configuration will get used when a not-sharded schema is being queried.
+    This configuration will be used when a not-sharded schema is being queried.
 
     ```elixir
     config :my_app, MyApp.Repo,
@@ -34,8 +34,7 @@ TODO
 
 1. Configure `Ecto.Sharding`
 
-    The minimum configuration that needs to be set is the `otp_app` so `Ecto.Sharding`
-    knows how to builds the repos for each shard.
+    `otp_app` needs to be set so `Ecto.Sharding` knows how to builds the repos for each shard.
 
     ```elixir
     config :ecto_sharding, Ecto.Sharding,
@@ -78,7 +77,7 @@ supervisor(Ecto.Sharding, [])
 
 1. `use Ecto.Sharding.Repo` instead of `Ecto.Repo`
 
-    In any repos you have defined in your app, change any calls to
+    In any repos you have defined in your app, use `Ecto.Sharding.Repo` instead:
 
     ```elixir
     use Ecto.Sharding.Repo, otp_app: :my_app
