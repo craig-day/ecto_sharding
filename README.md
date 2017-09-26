@@ -77,7 +77,7 @@ supervisor(Ecto.Sharding, [])
 
 1. `use Ecto.Sharding.Repo` instead of `Ecto.Repo`
 
-    In any repos you have defined in your app, use the `Ecto.Sharding.Repo` instead:
+    In any repos you have defined in your app, use `Ecto.Sharding.Repo` instead:
 
     ```elixir
     use Ecto.Sharding.Repo, otp_app: :my_app
