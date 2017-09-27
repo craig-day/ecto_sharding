@@ -124,16 +124,9 @@ defmodule Ecto.Sharding.Repo do
             preloads
             |> Enum.split_with(&sharded_association?(owner, &1))
 
-          if Enum.any?(sharded) && Enum.any?(unsharded) do
-            raise(ShardedAndUnshardedPreload,
-                  "You can't preload both sharded and unsharded associations in one call")
-          end
-
-          if List.first(sharded) do
-            ShardRegistry.current_repo.preload(structs, preloads, opts)
-          else
-            super(structs, preloads, opts)
-          end
+          structs
+          |> ShardRegistry.current_repo.preload(sharded, opts)
+          |> super(unsharded, opts)
         else
           super(structs, preloads, opts)
         end
