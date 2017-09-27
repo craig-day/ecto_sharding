@@ -1,6 +1,6 @@
-defmodule Ecto.Sharding.Repo do
+defmodule EctoSharding.Repo do
   defmodule QueryProcessing do
-    alias Ecto.Sharding.ShardRegistry
+    alias EctoSharding.ShardRegistry
 
     defmacro process_queryable(method, super_call, args) do
       quote do
@@ -38,7 +38,7 @@ defmodule Ecto.Sharding.Repo do
     quote bind_quoted: [opts: opts] do
       import QueryProcessing, only: [process_queryable: 3, process_schema: 3]
       use Ecto.Repo, opts
-      alias Ecto.Sharding.ShardRegistry
+      alias EctoSharding.ShardRegistry
 
       defoverridable Ecto.Repo
 

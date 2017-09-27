@@ -1,8 +1,8 @@
-defmodule Ecto.Sharding.Test do
+defmodule EctoSharding.Test do
   use ExUnit.Case
-  doctest Ecto.Sharding
+  doctest EctoSharding
 
   test "greets the world" do
-    assert Ecto.Sharding.hello() == :world
+    assert EctoSharding.hello() == :world
   end
 end

@@ -1,4 +1,4 @@
-defmodule Ecto.Sharding.Mixfile do
+defmodule EctoSharding.Mixfile do
   use Mix.Project
 
   def project do

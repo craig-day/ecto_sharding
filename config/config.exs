@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :ecto_sharding, Ecto.Sharding,
+config :ecto_sharding, EctoSharding,
   otp_app: :ecto_sharding,
   shards: %{
     1 => [

@@ -1,4 +1,4 @@
-defmodule Ecto.Sharding.ShardRegistry do
+defmodule EctoSharding.ShardRegistry do
   use GenServer
 
   # Server

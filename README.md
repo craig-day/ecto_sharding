@@ -1,4 +1,4 @@
-# Ecto.Sharding
+# EctoSharding
 
 A simple sharding library for Ecto. This works by building a `ShardRegistry` to
 create and track one `Ecto.Repo` for each shard specified in the configuration.
@@ -32,19 +32,19 @@ TODO
       pool_size: 15
     ```
 
-1. Configure `Ecto.Sharding`
+1. Configure `EctoSharding`
 
-    `otp_app` needs to be set so `Ecto.Sharding` knows how to builds the repos for each shard.
+    `otp_app` needs to be set so `EctoSharding` knows how to builds the repos for each shard.
 
     ```elixir
-    config :ecto_sharding, Ecto.Sharding,
+    config :ecto_sharding, EctoSharding,
       otp_app: :my_app
     ```
 
     If you know your shard information at compile time, you can also add that.
 
     ```elixir
-    config :ecto_sharding, Ecto.Sharding,
+    config :ecto_sharding, EctoSharding,
       otp_app: :my_app,
       shards: %{
         "shard_1" => [
@@ -66,24 +66,24 @@ TODO
       }
     ```
 
-1. Start `Ecto.Sharding` as a supervised process
+1. Start `EctoSharding` as a supervised process
 
 When the supervisor starts up, it will expect all of its configuration to be there,
 so make sure any config is set before `start_link` is called.
 
 ```elixir
-supervisor(Ecto.Sharding, [])
+supervisor(EctoSharding, [])
 ```
 
-1. `use Ecto.Sharding.Repo` instead of `Ecto.Repo`
+1. `use EctoSharding.Repo` instead of `Ecto.Repo`
 
-    In any repos you have defined in your app, use `Ecto.Sharding.Repo` instead:
+    In any repos you have defined in your app, use `EctoSharding.Repo` instead:
 
     ```elixir
-    use Ecto.Sharding.Repo, otp_app: :my_app
+    use EctoSharding.Repo, otp_app: :my_app
     ```
 
-1. `use Ecto.Sharding.Schema` instead of `Ecto.Schema`
+1. `use EctoSharding.Schema` instead of `Ecto.Schema`
 
     The schema is where most of the magic happens. This is where you can declare a
     particular schema as sharded or not. Schemas will default to sharded.
@@ -119,7 +119,7 @@ supervisor(Ecto.Sharding, [])
 
 #### Setting the current shard
 
-`Ecto.Sharding` uses a shard registry, backed by `GenServer` to store information
+`EctoSharding` uses a shard registry, backed by `GenServer` to store information
 about which shard we currently want to use and how to talk to that shard. This
 means that you need to set the current shard in your application before you can
 issue a query to the sharded database.
@@ -127,7 +127,7 @@ issue a query to the sharded database.
 Setting the shard is as simple as
 
 ```elixir
-Ecto.Sharding.current_shard("shard_1")
+EctoSharding.current_shard("shard_1")
 ```
 
 Take a `plug` based web application for example. This is what a `plug` that sets
@@ -143,7 +143,7 @@ defmodule MyApp.ShardContext do
 
   def call(conn, _) do
     account = conn.assigns.account
-    Ecto.Sharding.current_shard(account.shard_id)
+    EctoSharding.current_shard(account.shard_id)
     conn
   end
 end

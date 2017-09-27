@@ -1,4 +1,4 @@
-defmodule Ecto.Sharding.Schema do
+defmodule EctoSharding.Schema do
   defmacro __using__(opts \\ []) do
     sharded = Keyword.get(opts, :sharded, true)
 
