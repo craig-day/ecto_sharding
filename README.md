@@ -73,12 +73,12 @@ end
 
 1. Start `EctoSharding` as a supervised process
 
-When the supervisor starts up, it will expect all of its configuration to be there,
-so make sure any config is set before `start_link` is called.
+    When the supervisor starts up, it will expect all of its configuration to be there,
+    so make sure any config is set before `start_link` is called.
 
-```elixir
-supervisor(EctoSharding, [])
-```
+    ```elixir
+    supervisor(EctoSharding, [])
+    ```
 
 1. `use EctoSharding.Repo` instead of `Ecto.Repo`
 

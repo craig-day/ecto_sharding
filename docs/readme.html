@@ -8,6 +8,8 @@
     <title>EctoSharding – EctoSharding v0.0.2</title>
     <link rel="stylesheet" href="dist/app-5b9e160cec.css" />
     
+      <link rel="canonical" href="https://hexdocs.pm/ecto_sharding/readme.html" />
+    
     
     <script src="dist/sidebar_items-a526daf5c9.js"></script>
     
@@ -142,12 +144,10 @@ end</code></pre>
   }</code></pre>
 </li>
 <li><p>Start <a href="EctoSharding.html"><code class="inline">EctoSharding</code></a> as a supervised process</p>
-</li>
-</ol>
 <p>When the supervisor starts up, it will expect all of its configuration to be there,
 so make sure any config is set before <code class="inline">start_link</code> is called.</p>
 <pre><code class="elixir">supervisor(EctoSharding, [])</code></pre>
-<ol>
+</li>
 <li><p><code class="inline">use EctoSharding.Repo</code> instead of <code class="inline">Ecto.Repo</code></p>
 <p>In any repos you have defined in your app, use <a href="EctoSharding.Repo.html"><code class="inline">EctoSharding.Repo</code></a> instead:</p>
 <pre><code class="elixir">use EctoSharding.Repo, otp_app: :my_app</code></pre>
