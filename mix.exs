@@ -3,11 +3,15 @@ defmodule EctoSharding.Mixfile do
 
   def project do
     [
+      name: "EctoSharding",
       app: :ecto_sharding,
       version: "0.0.1",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
-      deps: deps()
+      deps: deps(),
+      description: description(),
+      package: package(),
+      source_url: "https://github.com/craig-day/ecto_sharding"
     ]
   end
 
@@ -22,6 +26,25 @@ defmodule EctoSharding.Mixfile do
   defp deps do
     [
       {:ecto, "~> 2.1"}
+    ]
+  end
+
+  defp description do
+    """
+    A sharding library for ecto databases. This builds an `Ecto.Repo` for each
+    shard specified in the configuration and tracks them in a registry. When a
+    query is passed into your applications Repo, it is inspected for a sharded
+    schema and proceeds with the query to the correct Repo.
+    """
+  end
+
+  defp package do
+    [
+      name: "EctoSharding",
+      files: ["lib", "mix.exs", "README.md", "LICENSE*", "license*"],
+      maintainers: ["Craig Day"],
+      licenses: ["Apache 2.0"],
+      links: %{"GitHub" => "https://github.com/elixir-ecto/postgrex"}
     ]
   end
 end
