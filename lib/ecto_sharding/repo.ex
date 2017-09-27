@@ -6,12 +6,11 @@ defmodule Ecto.Sharding.Repo do
       quote do
         %Ecto.Query{from: {_, model}} = List.first(unquote(args))
 
-        {repo, query_method} =
-          if model.sharded?,
-            do: {ShardRegistry.current_repo, unquote(method)},
-            else: {__MODULE__, :super}
-
-        apply(repo, query_method, unquote(args))
+        if model.sharded? do
+          apply(ShardRegistry.current_repo, unquote(method), unquote(args))
+        else
+          super(unquote_splicing(args))
+        end
       end
     end
 
@@ -20,12 +19,11 @@ defmodule Ecto.Sharding.Repo do
         struct = List.first(unquote(args))
         model = struct.__struct__
 
-        {repo, query_method} =
-          if model.sharded?,
-            do: {ShardRegistry.current_repo, unquote(method)},
-            else: {__MODULE__, :super}
-
-        apply(repo, query_method, unquote(args))
+        if model.sharded? do
+          apply(ShardRegistry.current_repo, unquote(method), unquote(args))
+        else
+          super(unquote_splicing(args))
+        end
       end
     end
   end
