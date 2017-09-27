@@ -36,10 +36,7 @@ defmodule EctoSharding.Mixfile do
 
   defp description do
     """
-    A sharding library for ecto databases. This builds an `Ecto.Repo` for each
-    shard specified in the configuration and tracks them in a registry. When a
-    query is passed into your applications Repo, it is inspected for a sharded
-    schema and proceeds with the query to the correct Repo.
+    A sharding library for ecto databases.
     """
   end
 
