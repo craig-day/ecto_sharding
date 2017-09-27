@@ -13,7 +13,7 @@ defmodule EctoSharding.Mixfile do
       package: package(),
       source_url: "https://github.com/craig-day/ecto_sharding",
       homepage_url: "https://github.com/craig-day/ecto_sharding",
-      docs: [main: "EctoSharding",
+      docs: [main: "readme",
              output: "docs",
              extras: ["README.md"]]
     ]

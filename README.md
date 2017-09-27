@@ -1,7 +1,6 @@
 # EctoSharding
 
-A simple sharding library for Ecto. This works by building a `ShardRegistry` to
-create and track one `Ecto.Repo` for each shard specified in the configuration.
+A simple sharding library for Ecto.
 
 * [Installation](#installation)
 * [Usage](#usage)
@@ -12,7 +11,13 @@ create and track one `Ecto.Repo` for each shard specified in the configuration.
 
 ## Installation
 
-TODO
+```elixir
+defp deps do
+  [
+    {:ecto_sharding, "~> 0.0.1"}
+  ]
+end
+```
 
 ## Usage
 
