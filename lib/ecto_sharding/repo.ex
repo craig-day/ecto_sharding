@@ -66,9 +66,6 @@ defmodule Ecto.Sharding.Repo do
           when aggregate in [:count, :avg, :max, :min, :sum] and is_atom(field),
         do: process_queryable(:aggregate, [queryable, field, opts])
 
-      def preload(queryable, preloads, opts \\ []),
-        do: process_queryable(:preload, [queryable, preloads, opts])
-
       def insert_all(schema_or_source, entries, opts \\ []),
         do: process_schema(:insert_all, [schema_or_source, entries, opts])
 
@@ -104,6 +101,23 @@ defmodule Ecto.Sharding.Repo do
 
       def load(schema_or_types, data),
         do: process_schema(:load, [schema_or_types, data])
+
+      def preload(struct_or_structs_or_nil, preloads, opts \\ [])
+      def preload(nil, preloads, opts), do: super(nil, preloads, opts)
+      def preload(struct, preloads, opts) when is_map(struct),
+        do: process_schema(:preload, [struct, preloads, opts])
+
+      def preload(structs, preloads, opts) when is_list(structs) do
+        if sample = Enum.find(structs, & &1) do
+          if sample.__struct__.sharded? do
+            ShardRegistry.current_repo.preload(structs, preloads, opts)
+          else
+            super(structs, preloads, opts)
+          end
+        else
+          super(structs, preloads, opts)
+        end
+      end
     end
   end
 end
