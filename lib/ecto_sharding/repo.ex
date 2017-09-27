@@ -28,6 +28,10 @@ defmodule Ecto.Sharding.Repo do
     end
   end
 
+  defmodule ShardedAndUnshardedPreload do
+    defexception [:message]
+  end
+
   defmacro __using__(opts) do
     quote bind_quoted: [opts: opts] do
       import QueryProcessing, only: [process_queryable: 3, process_schema: 3]
@@ -100,14 +104,32 @@ defmodule Ecto.Sharding.Repo do
       def load(schema_or_types, data),
         do: process_schema(:load, &super(&1, &2), [schema_or_types, data])
 
+      defp sharded_association?(schema, association) do
+        schema
+        |> Ecto.Association.association_from_schema!(association)
+        |> Map.get(:queryable)
+        |> apply(:sharded?, [])
+      end
+
       def preload(struct_or_structs_or_nil, preloads, opts \\ [])
       def preload(nil, preloads, opts), do: super(nil, preloads, opts)
       def preload(struct, preloads, opts) when is_map(struct),
-        do: process_schema(:preload, &super(&1, &2, &3), [struct, preloads, opts])
+        do: preload([struct], preloads, opts)
 
       def preload(structs, preloads, opts) when is_list(structs) do
         if sample = Enum.find(structs, & &1) do
-          if sample.__struct__.sharded? do
+          owner = sample.__struct__
+
+          {sharded, unsharded} =
+            preloads
+            |> Enum.split_with(&sharded_association?(owner, &1))
+
+          if Enum.any?(sharded) && Enum.any?(unsharded) do
+            raise(ShardedAndUnshardedPreload,
+                  "You can't preload both sharded and unsharded associations in one call")
+          end
+
+          if List.first(sharded) do
             ShardRegistry.current_repo.preload(structs, preloads, opts)
           else
             super(structs, preloads, opts)
