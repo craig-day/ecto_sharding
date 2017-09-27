@@ -1,7 +1,5 @@
 defmodule EctoSharding.Configuration do
-  @moduledoc """
-
-  """
+  @moduledoc false
   @otp_app :ecto_sharding |> Application.get_env(EctoSharding) |> Keyword.fetch!(:otp_app)
 
   def shard_repos do

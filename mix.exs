@@ -11,7 +11,11 @@ defmodule EctoSharding.Mixfile do
       deps: deps(),
       description: description(),
       package: package(),
-      source_url: "https://github.com/craig-day/ecto_sharding"
+      source_url: "https://github.com/craig-day/ecto_sharding",
+      homepage_url: "https://github.com/craig-day/ecto_sharding",
+      docs: [main: "EctoSharding",
+             output: "docs",
+             extras: ["README.md"]]
     ]
   end
 
@@ -25,7 +29,8 @@ defmodule EctoSharding.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ecto, "~> 2.1"}
+      {:ecto, "~> 2.1"},
+      {:ex_doc, "~> 0.16", only: :dev, runtime: false}
     ]
   end
 

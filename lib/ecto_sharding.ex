@@ -1,6 +1,7 @@
 defmodule EctoSharding do
   @moduledoc """
-  Documentation for EctoSharding.
+  EctoSharding provides a shard registry service and an `Ecto.Repo` compatible
+  query interface to support a sharded database structure.
   """
   use Supervisor
 

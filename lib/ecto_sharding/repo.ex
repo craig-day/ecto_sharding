@@ -1,5 +1,9 @@
 defmodule EctoSharding.Repo do
+  @moduledoc """
+  An `Ecto.Repo` wrapper. This should be used in place of `use Ecto.Repo`.
+  """
   defmodule QueryProcessing do
+    @moduledoc false
     alias EctoSharding.ShardRegistry
 
     defmacro process_queryable(method, super_call, args) do

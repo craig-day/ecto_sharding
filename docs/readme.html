@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.16.4">
+    <title>EctoSharding – EctoSharding v0.0.1</title>
+    <link rel="stylesheet" href="dist/app-5b9e160cec.css" />
+    
+    
+    <script src="dist/sidebar_items-a526daf5c9.js"></script>
+    
+  </head>
+  <body data-type="extras">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+
+<div class="main">
+<button class="sidebar-toggle">
+  <span class="icon-menu" aria-hidden="true"></span>
+  <span class="sr-only">Toggle Sidebar</span>
+</button>
+<section class="sidebar">
+
+  
+  <a href="https://github.com/craig-day/ecto_sharding" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        EctoSharding
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.0.1
+      </h2>
+    </div>
+    
+  </a>
+
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button">
+      <span class="icon-search" aria-hidden="true"></span>
+    </button>
+    <input name="q" type="text" id="search-list" class="search-input" placeholder="search" aria-label="Search" autocomplete="off" />
+  </form>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+
+    
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+<h1>EctoSharding</h1>
+<p>A simple sharding library for Ecto. This works by building a <code class="inline">ShardRegistry</code> to
+create and track one <code class="inline">Ecto.Repo</code> for each shard specified in the configuration.</p>
+<ul>
+<li><a href="#installation">Installation</a>
+</li>
+<li><p><a href="#usage">Usage</a></p>
+<ul>
+<li><a href="#configuration">Configuration</a>
+</li>
+<li><p><a href="#querying">Querying</a></p>
+<ul>
+<li><a href="#setting-the-current-shard">Setting the current shard</a>
+</li>
+<li><a href="#executing-a-query">Executing a query</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="installation" class="section-heading">
+  <a href="#installation" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Installation
+</h2>
+
+<p>TODO</p>
+<h2 id="usage" class="section-heading">
+  <a href="#usage" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Usage
+</h2>
+
+<h3 id="configuration" class="section-heading">
+  <a href="#configuration" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Configuration
+</h3>
+
+<ol>
+<li><p>Configure your app’s <code class="inline">Ecto.Repo</code></p>
+<p>This configuration will be used when a not-sharded schema is being queried.</p>
+<pre><code class="elixir">config :my_app, MyApp.Repo,
+  adapter: Ecto.Adapters.MySQL,
+  username: System.get_env(&quot;MYSQL_USERNAME&quot;),
+  password: System.get_env(&quot;MYSQL_PASSWORD&quot;),
+  database: System.get_env(&quot;MYSQL_DATABASE&quot;),
+  hostname: System.get_env(&quot;MYSQL_HOST&quot;),
+  pool_size: 15</code></pre>
+</li>
+<li><p>Configure <a href="EctoSharding.html"><code class="inline">EctoSharding</code></a></p>
+<p><code class="inline">otp_app</code> needs to be set so <a href="EctoSharding.html"><code class="inline">EctoSharding</code></a> knows how to builds the repos for each shard.</p>
+<pre><code class="elixir">config :ecto_sharding, EctoSharding,
+  otp_app: :my_app</code></pre>
+<p>If you know your shard information at compile time, you can also add that.</p>
+<pre><code class="elixir">config :ecto_sharding, EctoSharding,
+  otp_app: :my_app,
+  shards: %{
+    &quot;shard_1&quot; =&gt; [
+      adapter: Ecto.Adapters.MySQL,
+      username: System.get_env(&quot;MYSQL_USERNAME&quot;),
+      password: System.get_env(&quot;MYSQL_PASSWORD&quot;),
+      database: &quot;my_db_shard_1&quot;,
+      hostname: &quot;10.0.0.1&quot;,
+      pool_size: 15
+    ],
+    &quot;shard_2&quot; =&gt; [
+      adapter: Ecto.Adapters.MySQL,
+      username: System.get_env(&quot;MYSQL_USERNAME&quot;),
+      password: System.get_env(&quot;MYSQL_PASSWORD&quot;),
+      database: &quot;my_db_shard_2&quot;,
+      hostname: &quot;10.0.0.2&quot;,
+      pool_size: 15
+    ]
+  }</code></pre>
+</li>
+<li><p>Start <a href="EctoSharding.html"><code class="inline">EctoSharding</code></a> as a supervised process</p>
+</li>
+</ol>
+<p>When the supervisor starts up, it will expect all of its configuration to be there,
+so make sure any config is set before <code class="inline">start_link</code> is called.</p>
+<pre><code class="elixir">supervisor(EctoSharding, [])</code></pre>
+<ol>
+<li><p><code class="inline">use EctoSharding.Repo</code> instead of <code class="inline">Ecto.Repo</code></p>
+<p>In any repos you have defined in your app, use <a href="EctoSharding.Repo.html"><code class="inline">EctoSharding.Repo</code></a> instead:</p>
+<pre><code class="elixir">use EctoSharding.Repo, otp_app: :my_app</code></pre>
+</li>
+<li><p><code class="inline">use EctoSharding.Schema</code> instead of <code class="inline">Ecto.Schema</code></p>
+<p>The schema is where most of the magic happens. This is where you can declare a
+particular schema as sharded or not. Schemas will default to sharded.</p>
+<p><strong>A sharded schema</strong></p>
+<pre><code class="elixir">defmodule MyApp.User do
+  use Ecto.Schema, sharded: true # default
+
+  schema &quot;users&quot; do
+    field :name, :string
+    # ...
+  end
+end</code></pre>
+<p><strong>A not-sharded schema</strong></p>
+<pre><code class="elixir">defmodule MyApp.Account do
+  use Ecto.Schema, sharded: false
+
+  schema &quot;accounts&quot; do
+    field :name, :string
+    # ...
+  end
+end</code></pre>
+</li>
+</ol>
+<h3 id="querying" class="section-heading">
+  <a href="#querying" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Querying
+</h3>
+
+<h4>Setting the current shard</h4>
+<p><a href="EctoSharding.html"><code class="inline">EctoSharding</code></a> uses a shard registry, backed by <a href="https://hexdocs.pm/elixir/GenServer.html"><code class="inline">GenServer</code></a> to store information
+about which shard we currently want to use and how to talk to that shard. This
+means that you need to set the current shard in your application before you can
+issue a query to the sharded database.</p>
+<p>Setting the shard is as simple as</p>
+<pre><code class="elixir">EctoSharding.current_shard(&quot;shard_1&quot;)</code></pre>
+<p>Take a <code class="inline">plug</code> based web application for example. This is what a <code class="inline">plug</code> that sets
+the current shard might look like:</p>
+<pre><code class="elixir">defmodule MyApp.ShardContext do
+  @behaviour Plug
+
+  import Plug.Conn
+
+  def init(opts), do: opts
+
+  def call(conn, _) do
+    account = conn.assigns.account
+    EctoSharding.current_shard(account.shard_id)
+    conn
+  end
+end</code></pre>
+<h4>Executing a query</h4>
+<p>Once the current shard has been set, we can query our repo just like normal and
+it will take care of using the correct repo for the schema involved in the query.</p>
+<pre><code class="elixir">import Ecto.Query
+
+MyApp.User
+|&gt; where(name: &quot;Jane Doe&quot;)
+|&gt; limit(1)
+|&gt; MyApp.Repo</code></pre>
+
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.16.4),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle"><span class="sr-only">Switch theme</span></button>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-da04b39d0c.js"></script>
+  
+  </body>
+</html>
+
