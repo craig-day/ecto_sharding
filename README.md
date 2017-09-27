@@ -14,7 +14,7 @@ A simple sharding library for Ecto.
 ```elixir
 defp deps do
   [
-    {:ecto_sharding, "~> 0.0.1"}
+    {:ecto_sharding, "~> 0.0.2"}
   ]
 end
 ```
