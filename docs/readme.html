@@ -157,7 +157,7 @@ so make sure any config is set before <code class="inline">start_link</code> is 
 particular schema as sharded or not. Schemas will default to sharded.</p>
 <p><strong>A sharded schema</strong></p>
 <pre><code class="elixir">defmodule MyApp.User do
-  use Ecto.Schema, sharded: true # default
+  use EctoSharding.Schema, sharded: true # default
 
   schema &quot;users&quot; do
     field :name, :string
@@ -166,7 +166,7 @@ particular schema as sharded or not. Schemas will default to sharded.</p>
 end</code></pre>
 <p><strong>A not-sharded schema</strong></p>
 <pre><code class="elixir">defmodule MyApp.Account do
-  use Ecto.Schema, sharded: false
+  use EctoSharding.Schema, sharded: false
 
   schema &quot;accounts&quot; do
     field :name, :string

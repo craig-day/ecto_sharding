@@ -97,7 +97,7 @@ supervisor(EctoSharding, [])
 
     ```elixir
     defmodule MyApp.User do
-      use Ecto.Schema, sharded: true # default
+      use EctoSharding.Schema, sharded: true # default
 
       schema "users" do
         field :name, :string
@@ -110,7 +110,7 @@ supervisor(EctoSharding, [])
 
     ```elixir
     defmodule MyApp.Account do
-      use Ecto.Schema, sharded: false
+      use EctoSharding.Schema, sharded: false
 
       schema "accounts" do
         field :name, :string
