@@ -45,7 +45,7 @@ defmodule EctoSharding.Mixfile do
       files: ["lib", "mix.exs", "README.md", "LICENSE*"],
       maintainers: ["Craig Day"],
       licenses: ["Apache 2.0"],
-      links: %{"GitHub" => "https://github.com/elixir-ecto/postgrex"}
+      links: %{"GitHub" => "https://github.com/craig-day/ecto_sharding"}
     ]
   end
 end
