@@ -4,7 +4,13 @@ defmodule Ecto.Sharding.Repo do
 
     defmacro process_queryable(method, super_call, args) do
       quote do
-        %Ecto.Query{from: {_, model}} = List.first(unquote(args))
+        queryable = List.first(unquote(args))
+
+        model =
+          case queryable do
+            %Ecto.Query{from: {_, model}} -> model
+            model -> model
+          end
 
         if model.sharded? do
           apply(ShardRegistry.current_repo, unquote(method), unquote(args))
@@ -26,10 +32,6 @@ defmodule Ecto.Sharding.Repo do
         end
       end
     end
-  end
-
-  defmodule ShardedAndUnshardedPreload do
-    defexception [:message]
   end
 
   defmacro __using__(opts) do
