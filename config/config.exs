@@ -1,6 +1,7 @@
 use Mix.Config
 
-config :ecto_sharding, Ecto.Sharding.ShardRegistry,
+config :ecto_sharding, Ecto.Sharding,
+  otp_app: :ecto_sharding,
   shards: %{
     1 => [
       adapter: Ecto.Adapters.MySQL,
@@ -20,4 +21,4 @@ config :ecto_sharding, Ecto.Sharding.ShardRegistry,
     ]
   }
 
-import_config "#{Mix.env}.exs"
+# import_config "#{Mix.env}.exs"
