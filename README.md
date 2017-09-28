@@ -2,6 +2,8 @@
 
 A simple sharding library for Ecto.
 
+Documentation can be viewed on [hexdocs](https://hexdocs.pm/ecto_sharding/).
+
 * [Installation](#installation)
 * [Usage](#usage)
   * [Configuration](#configuration)

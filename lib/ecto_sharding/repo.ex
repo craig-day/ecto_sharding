@@ -1,46 +1,56 @@
 defmodule EctoSharding.Repo do
   @moduledoc """
   An `Ecto.Repo` wrapper. This should be used in place of `use Ecto.Repo`.
-  """
-  defmodule QueryProcessing do
-    @moduledoc false
-    alias EctoSharding.ShardRegistry
 
-    defmacro process_queryable(method, super_call, args) do
-      quote do
-        queryable = List.first(unquote(args))
+  This implements the same interface as `Ecto.Repo` and should be used in the
+  same way.
 
-        model =
-          case queryable do
-            %Ecto.Query{from: {_, model}} -> model
-            model -> model
-          end
+  ## Example
 
-        if model.sharded? do
-          apply(ShardRegistry.current_repo, unquote(method), unquote(args))
-        else
-          unquote(super_call).(unquote_splicing(args))
-        end
-      end
-    end
+  ```
+  defmodule MyApp.Repo do
+    use EctoSharding.Repo, otp_app: :my_app
+  end
 
-    defmacro process_schema(method, super_call, args) do
-      quote do
-        struct = List.first(unquote(args))
-        model = struct.__struct__
+  defmodule MyApp.Account do
+    use Ecto.Schema, sharded: false
 
-        if model.sharded? do
-          apply(ShardRegistry.current_repo, unquote(method), unquote(args))
-        else
-          unquote(super_call).(unquote_splicing(args))
-        end
-      end
+    schema "accounts" do
+      field :name, :string
+
+      has_many :users, MyApp.User
     end
   end
 
+  defmodule MyApp.User do
+    use Ecto.Schema
+
+    schema "users" do
+      field :name, :string
+      field :email, :string
+
+      belongs_to :account, MyApp.Account
+    end
+  end
+
+
+  # Fetch an account and preload all of its users
+
+  MyApp.Account
+  |> MyApp.Repo.get(1)
+  |> MyApp.Repo.preload([:users])
+
+  %MyApp.Account{name: "Account 1",
+    users: [%MyApp.User{name: "User 1", email: "user1@example.com"}]}
+  ```
+  """
+
+  @type t :: struct
+
+  @doc false
   defmacro __using__(opts) do
     quote bind_quoted: [opts: opts] do
-      import QueryProcessing, only: [process_queryable: 3, process_schema: 3]
+      import EctoSharding.QueryProcessing, only: [process_queryable: 3, process_schema: 3]
       use Ecto.Repo, opts
       alias EctoSharding.ShardRegistry
 
