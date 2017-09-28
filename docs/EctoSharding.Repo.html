@@ -5,13 +5,13 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.16.4">
-    <title>EctoSharding.Repo – EctoSharding v0.0.2</title>
+    <title>EctoSharding.Repo – EctoSharding v0.0.3</title>
     <link rel="stylesheet" href="dist/app-5b9e160cec.css" />
     
       <link rel="canonical" href="https://hexdocs.pm/ecto_sharding/EctoSharding.Repo.html" />
     
     
-    <script src="dist/sidebar_items-a526daf5c9.js"></script>
+    <script src="dist/sidebar_items-7dbcbb5014.js"></script>
     
   </head>
   <body data-type="modules">
@@ -31,7 +31,7 @@
         EctoSharding
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.0.2
+        v0.0.3
       </h2>
     </div>
     
@@ -67,7 +67,7 @@
 
 
       <h1>
-        <small class="visible-xs">EctoSharding v0.0.2</small>
+        <small class="visible-xs">EctoSharding v0.0.3</small>
         EctoSharding.Repo
         
           <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding/repo.ex#L1" title="View Source" class="view-source" rel="help">
@@ -80,12 +80,123 @@
       
         <section id="moduledoc">
           <p>An <a href="https://hexdocs.pm/ecto/2.2.4/Ecto.Repo.html"><code class="inline">Ecto.Repo</code></a> wrapper. This should be used in place of <code class="inline">use Ecto.Repo</code>.</p>
+<p>This implements the same interface as <a href="https://hexdocs.pm/ecto/2.2.4/Ecto.Repo.html"><code class="inline">Ecto.Repo</code></a> and should be used in the
+same way.</p>
+<h2 id="module-example" class="section-heading">
+  <a href="#module-example" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Example
+</h2>
+
+<pre><code class="elixir">defmodule MyApp.Repo do
+  use EctoSharding.Repo, otp_app: :my_app
+end
+
+defmodule MyApp.Account do
+  use Ecto.Schema, sharded: false
+
+  schema &quot;accounts&quot; do
+    field :name, :string
+
+    has_many :users, MyApp.User
+  end
+end
+
+defmodule MyApp.User do
+  use Ecto.Schema
+
+  schema &quot;users&quot; do
+    field :name, :string
+    field :email, :string
+
+    belongs_to :account, MyApp.Account
+  end
+end
+
+
+# Fetch an account and preload all of its users
+
+MyApp.Account
+|&gt; MyApp.Repo.get(1)
+|&gt; MyApp.Repo.preload([:users])
+
+%MyApp.Account{name: &quot;Account 1&quot;,
+  users: [%MyApp.User{name: &quot;User 1&quot;, email: &quot;user1@example.com&quot;}]}</code></pre>
 
         </section>
       
 
       
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+          
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:t/0">t()</a>
+  </div>
+  
+</div>
 
+  </div>
+
+
+          
+
+          
+
+        </section>
+      
+
+      
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Types
+          </h1>
+          <div class="types-list">
+            <div class="detail" id="t:t/0">
+  
+  
+  <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <span class="signature">t()</span>
+    
+      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding/repo.ex#L48" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>t() :: struct</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+
+          </div>
+        </section>
       
 
       

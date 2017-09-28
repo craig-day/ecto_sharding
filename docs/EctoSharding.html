@@ -5,13 +5,13 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.16.4">
-    <title>EctoSharding – EctoSharding v0.0.2</title>
+    <title>EctoSharding – EctoSharding v0.0.3</title>
     <link rel="stylesheet" href="dist/app-5b9e160cec.css" />
     
       <link rel="canonical" href="https://hexdocs.pm/ecto_sharding/EctoSharding.html" />
     
     
-    <script src="dist/sidebar_items-a526daf5c9.js"></script>
+    <script src="dist/sidebar_items-7dbcbb5014.js"></script>
     
   </head>
   <body data-type="modules">
@@ -31,7 +31,7 @@
         EctoSharding
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.0.2
+        v0.0.3
       </h2>
     </div>
     
@@ -67,7 +67,7 @@
 
 
       <h1>
-        <small class="visible-xs">EctoSharding v0.0.2</small>
+        <small class="visible-xs">EctoSharding v0.0.3</small>
         EctoSharding
         
           <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L1" title="View Source" class="view-source" rel="help">
@@ -79,8 +79,16 @@
 
       
         <section id="moduledoc">
-          <p>EctoSharding provides a shard registry service and an <a href="https://hexdocs.pm/ecto/2.2.4/Ecto.Repo.html"><code class="inline">Ecto.Repo</code></a> compatible
-query interface to support a sharded database structure.</p>
+          <p>EctoSharding ShardRegistry and Repo supervisor.</p>
+<p>This is the supervisor that will supervise the internal shard registry and
+build and supervise the ecto repo for each shard specified in the configuration.
+Before <code class="inline">start_link</code> is called all of the shard configuration must be present in
+the <code class="inline">ecto_sharding</code> application env. In otherwords,
+<code class="inline">Application.get_env(:ecto_sharding, Ecto.Sharding)</code> must return all of the
+configured shards.</p>
+<p>This also provides the only public API to the shard registry that consumers
+should need to interact with, which allows for setting the current shard and
+retriving the correct repo for the current shard.</p>
 
         </section>
       
@@ -95,6 +103,22 @@ query interface to support a sharded database structure.</p>
             Summary
           </h1>
           
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:shard/0">shard()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>The identifier for a shard repo</p>
+</div>
+  
+</div>
+
+  </div>
+
 
           
   <div class="summary-functions summary">
@@ -103,14 +127,38 @@ query interface to support a sharded database structure.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#current_repo/0">current_repo()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Get the queryable repo based on the current shard</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#current_shard/0">current_shard()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Get the currently set shard</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#current_shard/1">current_shard(shard)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Set the current shard to be used for all queries including sharded schemas</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#start_link/0">start_link()</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Start the sharding supervisor</p>
+</div>
   
 </div>
 
@@ -123,6 +171,51 @@ query interface to support a sharded database structure.</p>
       
 
       
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Types
+          </h1>
+          <div class="types-list">
+            <div class="detail" id="t:shard/0">
+  
+  
+  <div class="detail-header">
+    <a href="#t:shard/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <span class="signature">shard()</span>
+    
+      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L26" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>shard() :: integer | <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>The identifier for a shard repo.</p>
+<p>This will be used to store and lookup each shard repo. It currently only allows
+integers or strings, but in the future it may support anything that implements
+<a href="https://hexdocs.pm/elixir/String.Chars.html"><code class="inline">String.Chars</code></a> protocol.</p>
+
+  </section>
+</div>
+
+          </div>
+        </section>
+      
 
       
         <section id="functions" class="details-list">
@@ -133,7 +226,65 @@ query interface to support a sharded database structure.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="current_shard/1">
+          <div class="detail" id="current_repo/0">
+  
+  
+  <div class="detail-header">
+    <a href="#current_repo/0" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <span class="signature">current_repo()</span>
+    
+      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L48" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>current_repo() :: <a href="EctoSharding.Repo.html#t:t/0">EctoSharding.Repo.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Get the queryable repo based on the current shard.</p>
+
+  </section>
+</div>
+<div class="detail" id="current_shard/0">
+  
+  
+  <div class="detail-header">
+    <a href="#current_shard/0" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <span class="signature">current_shard()</span>
+    
+      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L40" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>current_shard() :: <a href="#t:shard/0">shard</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Get the currently set shard.</p>
+
+  </section>
+</div>
+<div class="detail" id="current_shard/1">
   
   
   <div class="detail-header">
@@ -143,16 +294,23 @@ query interface to support a sharded database structure.</p>
     </a>
     <span class="signature">current_shard(shard)</span>
     
-      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L8" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L32" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
     
     
     
+      <div class="specs">
+        
+          <pre>current_shard(<a href="#t:shard/0">shard</a>) :: :ok</pre>
+        
+      </div>
+    
   </div>
   <section class="docstring">
-    
+    <p>Set the current shard to be used for all queries including sharded schemas.</p>
+
   </section>
 </div>
 <div class="detail" id="start_link/0">
@@ -165,16 +323,23 @@ query interface to support a sharded database structure.</p>
     </a>
     <span class="signature">start_link()</span>
     
-      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L12" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L56" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
     
     
     
+      <div class="specs">
+        
+          <pre>start_link() :: {:ok, pid}</pre>
+        
+      </div>
+    
   </div>
   <section class="docstring">
-    
+    <p>Start the sharding supervisor.</p>
+
   </section>
 </div>
 
