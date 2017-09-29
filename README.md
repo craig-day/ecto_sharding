@@ -1,6 +1,6 @@
 # EctoSharding
 
-[![Build Status](https://travis-ci.org/craig-day/ecto_sharding.svg?branch=master)](https://travis-ci.org/craig-day/ecto_sharding)
+[![Build Status](https://travis-ci.org/craig-day/ecto_sharding.svg?branch=master)](https://travis-ci.org/craig-day/ecto_sharding) [![Coverage Status](https://coveralls.io/repos/github/craig-day/ecto_sharding/badge.svg?branch=craig-day%2Fcoveralls)](https://coveralls.io/github/craig-day/ecto_sharding?branch=craig-day%2Fcoveralls)
 
 A simple sharding library for Ecto.
 
