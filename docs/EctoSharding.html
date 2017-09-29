@@ -5,13 +5,13 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.16.4">
-    <title>EctoSharding – EctoSharding v0.0.3</title>
+    <title>EctoSharding – EctoSharding v0.0.4</title>
     <link rel="stylesheet" href="dist/app-5b9e160cec.css" />
     
       <link rel="canonical" href="https://hexdocs.pm/ecto_sharding/EctoSharding.html" />
     
     
-    <script src="dist/sidebar_items-7dbcbb5014.js"></script>
+    <script src="dist/sidebar_items-2e4b6a5bc3.js"></script>
     
   </head>
   <body data-type="modules">
@@ -31,7 +31,7 @@
         EctoSharding
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.0.3
+        v0.0.4
       </h2>
     </div>
     
@@ -67,7 +67,7 @@
 
 
       <h1>
-        <small class="visible-xs">EctoSharding v0.0.3</small>
+        <small class="visible-xs">EctoSharding v0.0.4</small>
         EctoSharding
         
           <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L1" title="View Source" class="view-source" rel="help">
@@ -130,7 +130,7 @@ retriving the correct repo for the current shard.</p>
     <a href="#current_repo/0">current_repo()</a>
   </div>
   
-    <div class="summary-synopsis"><p>Get the queryable repo based on the current shard</p>
+    <div class="summary-synopsis"><p>Get the repo based on the current shard</p>
 </div>
   
 </div>
@@ -149,6 +149,15 @@ retriving the correct repo for the current shard.</p>
   </div>
   
     <div class="summary-synopsis"><p>Set the current shard to be used for all queries including sharded schemas</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#repo_for_shard/1">repo_for_shard(shard)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Get the repo corresponding to the give shard</p>
 </div>
   
 </div>
@@ -236,7 +245,7 @@ integers or strings, but in the future it may support anything that implements
     </a>
     <span class="signature">current_repo()</span>
     
-      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L48" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L56" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -251,7 +260,7 @@ integers or strings, but in the future it may support anything that implements
     
   </div>
   <section class="docstring">
-    <p>Get the queryable repo based on the current shard.</p>
+    <p>Get the repo based on the current shard.</p>
 
   </section>
 </div>
@@ -265,7 +274,7 @@ integers or strings, but in the future it may support anything that implements
     </a>
     <span class="signature">current_shard()</span>
     
-      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L40" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L48" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -294,7 +303,7 @@ integers or strings, but in the future it may support anything that implements
     </a>
     <span class="signature">current_shard(shard)</span>
     
-      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L32" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L40" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -313,6 +322,35 @@ integers or strings, but in the future it may support anything that implements
 
   </section>
 </div>
+<div class="detail" id="repo_for_shard/1">
+  
+  
+  <div class="detail-header">
+    <a href="#repo_for_shard/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <span class="signature">repo_for_shard(shard)</span>
+    
+      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L64" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>repo_for_shard(<a href="#t:shard/0">shard</a>) :: <a href="EctoSharding.Repo.html#t:t/0">EctoSharding.Repo.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Get the repo corresponding to the give shard.</p>
+
+  </section>
+</div>
 <div class="detail" id="start_link/0">
   
   
@@ -323,7 +361,7 @@ integers or strings, but in the future it may support anything that implements
     </a>
     <span class="signature">start_link()</span>
     
-      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L56" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/craig-day/ecto_sharding/blob/master/lib/ecto_sharding.ex#L32" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
