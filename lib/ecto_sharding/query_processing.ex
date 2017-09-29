@@ -22,8 +22,13 @@ defmodule EctoSharding.QueryProcessing do
 
   defmacro process_schema(method, super_call, args) do
     quote do
-      struct = List.first(unquote(args))
-      model = struct.__struct__
+      struct_or_schema = List.first(unquote(args))
+
+      model =
+        case struct_or_schema do
+          %schema{} -> schema
+          schema -> schema
+        end
 
       if model.sharded? do
         apply(ShardRegistry.current_repo, unquote(method), unquote(args))

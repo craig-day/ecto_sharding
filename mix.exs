@@ -9,6 +9,7 @@ defmodule EctoSharding.Mixfile do
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       deps: deps(),
+      aliases: aliases(),
       description: description(),
       package: package(),
       source_url: "https://github.com/craig-day/ecto_sharding",
@@ -30,6 +31,7 @@ defmodule EctoSharding.Mixfile do
   defp deps do
     [
       {:ecto, "~> 2.1"},
+      {:mariaex, ">= 0.0.0", only: :test},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false}
     ]
   end
@@ -47,5 +49,25 @@ defmodule EctoSharding.Mixfile do
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/craig-day/ecto_sharding"}
     ]
+  end
+
+  defp aliases do
+    [
+      "test.db.create": &create_test_dbs/1,
+      "test": ["test.db.create", "test"]
+    ]
+  end
+
+  defp create_test_dbs(_) do
+    mysql_user = System.get_env("MYSQL_USER") || "root"
+
+    System.cmd "mysql",
+      ["-u", mysql_user, "-e", "create database if not exists ecto_sharding_test"]
+
+    System.cmd "mysql",
+      ["-u", mysql_user, "-e", "create database if not exists ecto_sharding_test_shard_1"]
+
+    System.cmd "mysql",
+      ["-u", mysql_user, "-e", "create database if not exists ecto_sharding_test_shard_2"]
   end
 end

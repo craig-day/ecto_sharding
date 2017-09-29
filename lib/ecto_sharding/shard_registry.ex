@@ -46,10 +46,6 @@ defmodule EctoSharding.ShardRegistry do
 
   def handle_call(request, from, state), do: super(request, from, state)
 
-  def handle_cast({:register, shard, repo}, {_, shards}) do
-    {:noreply, Map.put(shards, shard, repo)}
-  end
-
   def handle_cast({:set, shard}, {_, shards}) do
     {:noreply, {shard, shards}}
   end

@@ -81,8 +81,9 @@ defmodule EctoSharding.Repo do
         do: process_queryable(:one!, &super(&1, &2), [queryable, opts])
 
       def aggregate(queryable, aggregate, field, opts \\ [])
-          when aggregate in [:count, :avg, :max, :min, :sum] and is_atom(field),
-        do: process_queryable(:aggregate, &super(&1, &2, &3, &4), [queryable, field, opts])
+          when aggregate in [:count, :avg, :max, :min, :sum] and is_atom(field) do
+        process_queryable(:aggregate, &super(&1, &2, &3, &4), [queryable, aggregate, field, opts])
+      end
 
       def insert_all(schema_or_source, entries, opts \\ []),
         do: process_schema(:insert_all, &super(&1, &2, &3), [schema_or_source, entries, opts])

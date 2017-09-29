@@ -26,6 +26,14 @@ defmodule EctoSharding do
   @type shard :: integer | String.t
 
   @doc """
+  Start the sharding supervisor.
+  """
+  @spec start_link :: {:ok, pid}
+  def start_link do
+    Supervisor.start_link(__MODULE__, :ok, [])
+  end
+
+  @doc """
   Set the current shard to be used for all queries including sharded schemas.
   """
   @spec current_shard(shard) :: :ok
@@ -42,7 +50,7 @@ defmodule EctoSharding do
   end
 
   @doc """
-  Get the queryable repo based on the current shard.
+  Get the repo based on the current shard.
   """
   @spec current_repo :: EctoSharding.Repo.t
   def current_repo do
@@ -50,11 +58,11 @@ defmodule EctoSharding do
   end
 
   @doc """
-  Start the sharding supervisor.
+  Get the repo corresponding to the give shard.
   """
-  @spec start_link :: {:ok, pid}
-  def start_link do
-    Supervisor.start_link(__MODULE__, :ok, [])
+  @spec repo_for_shard(shard) :: EctoSharding.Repo.t
+  def repo_for_shard(shard) do
+    ShardRegistry.repo_for_shard(shard)
   end
 
   @doc false
@@ -62,7 +70,8 @@ defmodule EctoSharding do
     shard_repos = EctoSharding.Configuration.shard_repos
 
     children =
-      own_children(shard_repos)
+      shard_repos
+      |> own_children()
       |> Enum.concat(shard_children(shard_repos))
 
     Supervisor.init(children, strategy: :one_for_one)
