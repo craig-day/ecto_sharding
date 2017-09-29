@@ -1,5 +1,7 @@
 # EctoSharding
 
+[![Build Status](https://travis-ci.org/craig-day/ecto_sharding.svg?branch=master)](https://travis-ci.org/craig-day/ecto_sharding)
+
 A simple sharding library for Ecto.
 
 Documentation can be viewed on [hexdocs](https://hexdocs.pm/ecto_sharding/).
