@@ -121,6 +121,9 @@ defmodule EctoSharding.Repo do
       def load(schema_or_types, data),
         do: process_schema(:load, &super(&1, &2), [schema_or_types, data])
 
+      defp sharded_association?(schema, {association, _query}),
+        do: sharded_association?(schema, association)
+
       defp sharded_association?(schema, association) do
         schema
         |> Ecto.Association.association_from_schema!(association)
