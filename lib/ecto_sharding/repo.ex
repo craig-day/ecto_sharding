@@ -130,6 +130,10 @@ defmodule EctoSharding.Repo do
 
       def preload(struct_or_structs_or_nil, preloads, opts \\ [])
       def preload(nil, preloads, opts), do: super(nil, preloads, opts)
+
+      def preload(struct, preload, opts) when is_atom(preload),
+        do: preload(struct, [preload], opts)
+
       def preload(struct, preloads, opts) when is_map(struct),
         do: preload([struct], preloads, opts)
 
