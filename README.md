@@ -18,7 +18,7 @@ Documentation can be viewed on [hexdocs](https://hexdocs.pm/ecto_sharding/).
 ```elixir
 defp deps do
   [
-    {:ecto_sharding, "~> 0.0.4"}
+    {:ecto_sharding, "~> 0.0.5"}
   ]
 end
 ```

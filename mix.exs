@@ -5,7 +5,7 @@ defmodule EctoSharding.Mixfile do
     [
       name: "EctoSharding",
       app: :ecto_sharding,
-      version: "0.0.4",
+      version: "0.0.5",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       deps: deps(),
