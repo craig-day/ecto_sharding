@@ -364,5 +364,9 @@ defmodule EctoSharding.Repo.Test do
     test "succeeds with a not-sharded schema" do
 
     end
+
+    test "succeeds with a has-through association" do
+
+    end
   end
 end
