@@ -31,7 +31,7 @@ defmodule EctoSharding.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ecto, git: "https://github.com/craig-day/ecto.git", branch: "craig-day/debug"},
+      {:ecto, "~> 2.1"},
       {:mariaex, ">= 0.0.0", only: :test},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:coverex, "~> 1.4.10", only: :test}
