@@ -54,6 +54,8 @@ defmodule EctoSharding.Repo do
       import EctoSharding.QueryProcessing, only: [process_queryable: 3, process_schema: 3]
       alias EctoSharding.ShardRegistry
 
+      defoverridable Ecto.Repo
+
       def all(queryable, opts \\ []),
         do: process_queryable(:all, &super(&1, &2), [queryable, opts])
 
