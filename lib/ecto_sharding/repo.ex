@@ -57,6 +57,7 @@ defmodule EctoSharding.Repo do
       defoverridable Ecto.Repo
 
       def __log__(entry) do
+        require IEx; IEx.pry
         super(entry)
       end
 
