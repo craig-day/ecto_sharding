@@ -56,7 +56,9 @@ defmodule EctoSharding.Repo do
 
       defoverridable Ecto.Repo
 
-      {otp_app, adapter, config} = Ecto.Repo.Supervisor.compile_config(__MODULE__, opts)
+      {_, _, config} = Ecto.Repo.Supervisor.compile_config(__MODULE__, opts)
+
+      IO.inspect(config)
 
       loggers =
         Enum.reduce(opts[:loggers] || config[:loggers] || [Ecto.LogEntry], quote(do: entry), fn
