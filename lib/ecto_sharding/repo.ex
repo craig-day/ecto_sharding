@@ -49,12 +49,10 @@ defmodule EctoSharding.Repo do
 
   @doc false
   defmacro __using__(opts) do
-    quote bind_quoted: [opts: opts] do
+    quote do
+      use Ecto.Repo, unquote(opts)
       import EctoSharding.QueryProcessing, only: [process_queryable: 3, process_schema: 3]
-      use Ecto.Repo, opts
       alias EctoSharding.ShardRegistry
-
-      defoverridable Ecto.Repo
 
       def all(queryable, opts \\ []),
         do: process_queryable(:all, &super(&1, &2), [queryable, opts])
