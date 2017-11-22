@@ -56,6 +56,10 @@ defmodule EctoSharding.Repo do
 
       defoverridable Ecto.Repo
 
+      def __log__(entry) do
+        super(entry)
+      end
+
       def all(queryable, opts \\ []),
         do: process_queryable(:all, &super(&1, &2), [queryable, opts])
 
