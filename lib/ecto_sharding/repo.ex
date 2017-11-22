@@ -56,9 +56,20 @@ defmodule EctoSharding.Repo do
 
       defoverridable Ecto.Repo
 
+      {otp_app, adapter, config} = Ecto.Repo.Supervisor.compile_config(__MODULE__, opts)
+
+      loggers =
+        Enum.reduce(opts[:loggers] || config[:loggers] || [Ecto.LogEntry], quote(do: entry), fn
+          mod, acc when is_atom(mod) ->
+            quote do: unquote(mod).log(unquote(acc))
+          {Ecto.LogEntry, :log, [level]}, _acc when not level in [:error, :info, :warn, :debug] ->
+            raise ArgumentError, "the log level #{inspect level} is not supported in Ecto.LogEntry"
+          {mod, fun, args}, acc ->
+            quote do: unquote(mod).unquote(fun)(unquote(acc), unquote_splicing(args))
+        end)
+
       def __log__(entry) do
-        require IEx; IEx.pry
-        super(entry)
+        unquote(loggers)
       end
 
       def all(queryable, opts \\ []),
