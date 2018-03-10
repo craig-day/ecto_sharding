@@ -67,4 +67,10 @@ defmodule Mix.Tasks.Shards.Test do
       assert called Ecto.Gen.Migration.run(["add_column_to_table", "--repo", "Elixir.EctoSharding.Repos.Shard_1"])
     end
   end
+
+  test "set_repo overrides user-provided repo from CLI" do
+    args = ["-r", "user-repo", "--repo", "another-repo", "--to", "1234", "foobar", "--bad-switch", "garbage"]
+    good_repo = "good-repo"
+    assert Mix.Tasks.Shards.set_repo(good_repo, args) == ["foobar", "--to", "1234", "--repo", "good-repo", {"--bad-switch", "garbage"}]
+  end
 end
