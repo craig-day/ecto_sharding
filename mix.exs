@@ -34,7 +34,8 @@ defmodule EctoSharding.Mixfile do
       {:ecto, "~> 2.1"},
       {:mariaex, ">= 0.0.0", only: :test},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
-      {:coverex, "~> 1.4.10", only: :test}
+      {:coverex, "~> 1.4.10", only: :test},
+      {:ex_mock, "~> 0.1.1", only: :test}
     ]
   end
 
