@@ -12,7 +12,7 @@ defmodule EctoSharding.QueryProcessing do
           model -> model
         end
 
-      if model.sharded? do
+      if Keyword.has_key?(model.__info__(:functions), :sharded?) && model.sharded? do
         apply(ShardRegistry.current_repo, unquote(method), unquote(args))
       else
         unquote(super_call).(unquote_splicing(args))
@@ -30,7 +30,7 @@ defmodule EctoSharding.QueryProcessing do
           schema -> schema
         end
 
-      if model.sharded? do
+      if Keyword.has_key?(model.__info__(:functions), :sharded?) && model.sharded? do
         apply(ShardRegistry.current_repo, unquote(method), unquote(args))
       else
         unquote(super_call).(unquote_splicing(args))

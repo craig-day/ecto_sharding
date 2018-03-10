@@ -9,6 +9,7 @@ Documentation can be viewed on [hexdocs](https://hexdocs.pm/ecto_sharding/).
 * [Installation](#installation)
 * [Usage](#usage)
   * [Configuration](#configuration)
+    * [Advanced Configuration Options](advanced_config.md)
   * [Querying](#querying)
     * [Setting the current shard](#setting-the-current-shard)
     * [Executing a query](#executing-a-query)
@@ -51,6 +52,9 @@ end
     ```
 
     If you know your shard information at compile time, you can also add that.
+    
+    Note: Be sure to specify your path where you want the shard migrations to go with the `priv` key.  In the example
+    below, the migrations will be in `priv/shards/migrations`.  This way they do not conflict with main db migrations.
 
     ```elixir
     config :ecto_sharding, EctoSharding,
@@ -62,7 +66,8 @@ end
           password: System.get_env("MYSQL_PASSWORD"),
           database: "my_db_shard_1",
           hostname: "10.0.0.1",
-          pool_size: 15
+          pool_size: 15,
+          priv: "priv/shards"
         ],
         "shard_2" => [
           adapter: Ecto.Adapters.MySQL,
@@ -70,7 +75,8 @@ end
           password: System.get_env("MYSQL_PASSWORD"),
           database: "my_db_shard_2",
           hostname: "10.0.0.2",
-          pool_size: 15
+          pool_size: 15,
+          priv: "priv/shards"
         ]
       }
     ```
