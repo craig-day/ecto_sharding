@@ -13,11 +13,13 @@ defmodule Mix.Tasks.Shards do
   def set_repo(repo, args) do
     {parsed, args, other} = OptionParser.parse(args, aliases: [r: :repo])
 
-    permitted = parsed
-                |> Keyword.merge(repo: repo)
-                |> OptionParser.to_argv()
+    permitted =
+      parsed
+        |> Keyword.merge(repo: repo)
+        |> OptionParser.to_argv()
 
-    [args, permitted, other] |> List.flatten()
+    [args, permitted, other]
+      |> List.flatten()
   end
 
   defmodule Create do
@@ -58,7 +60,7 @@ defmodule Mix.Tasks.Shards do
     def run(args \\ []) do
       Enum.each(Config.shard_repos(), fn({_name, repo}) ->
         Shards.set_repo(repo, args)
-        |> Mix.Tasks.Ecto.Migrate.run()
+        |> Mix.Tasks.Ecto.Migrate.run
       end)
     end
   end
@@ -72,7 +74,7 @@ defmodule Mix.Tasks.Shards do
     def run(args \\ []) do
       Enum.each(Config.shard_repos(), fn({_name, repo}) ->
         Shards.set_repo(repo, args)
-        |> Mix.Tasks.Ecto.Rollback.run()
+        |> Mix.Tasks.Ecto.Rollback.run
       end)
     end
   end
@@ -86,7 +88,7 @@ defmodule Mix.Tasks.Shards do
     def run(args \\ []) do
       Enum.each(Config.shard_repos(), fn({_name, repo}) ->
         Shards.set_repo(repo, args)
-        |> Mix.Tasks.Ecto.Load.run()
+        |> Mix.Tasks.Ecto.Load.run
       end)
     end
   end
@@ -99,10 +101,10 @@ defmodule Mix.Tasks.Shards do
     @doc "Generates a migration for the Shard DB's"
     def run(args \\ []) do
       Config.shard_repos()
-      |> Map.values()
-      |> List.first()
+      |> Map.values
+      |> List.first
       |> Shards.set_repo(args)
-      |> Mix.Tasks.Ecto.Gen.Migration.run()
+      |> Mix.Tasks.Ecto.Gen.Migration.run
     end
   end
 
@@ -115,10 +117,10 @@ defmodule Mix.Tasks.Shards do
     # Note: we only do the first one because all shards carry the same migrations
     def run(args \\ []) do
       Config.shard_repos()
-      |> Map.values()
-      |> List.first()
+      |> Map.values
+      |> List.first
       |> Shards.set_repo(args)
-      |> Mix.Tasks.Ecto.Dump.run()
+      |> Mix.Tasks.Ecto.Dump.run
     end
   end
 end

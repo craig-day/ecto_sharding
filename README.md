@@ -53,9 +53,12 @@ end
 
     If you know your shard information at compile time, you can also add that.
     
-    Note: Be sure to specify your path where you want the shard migrations to go with the `priv` key.  In the example
-    below, the migrations will be in `priv/shards/migrations`.  This way they do not conflict with main db migrations.
-
+    Note: Be sure to set the `priv` key for the shard repos to something different than the main db.  Ecto uses the
+    `priv` key to determine where to put the migrations folder and schema files for a Repo.  Defining this for the 
+    shards Repos avoids mixing the main db and shard db files in the same directory. In the example below, the shard db
+    migrations will be in `priv/shards/migrations`, and the main db files will be in `priv/repo/migrations` (the Ecto 
+    default location when `priv` is not specified).
+    
     ```elixir
     config :ecto_sharding, EctoSharding,
       otp_app: :my_app,
