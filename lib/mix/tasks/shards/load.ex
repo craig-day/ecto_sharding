@@ -1,13 +1,9 @@
 defmodule Mix.Tasks.Shards.Load do
-  use Mix.Task
-  alias Mix.Tasks.Shards
-  alias EctoSharding.Configuration, as: Config
+  @moduledoc "A wrapper around Ecto Mix Tasks that loads the schema from a file into each sharded database."
+  use Mix.Tasks.Shards
 
-  @doc "Loads the Shard DB's from the schema dump file"
+  @doc "Loads the Shard DB's from the schema dump file.  Accepts the same arguments as Ecto does."
   def run(args \\ []) do
-    Enum.each(Config.shard_repos(), fn({_name, repo}) ->
-      Shards.set_repo(repo, args)
-      |> Mix.Tasks.Ecto.Load.run
-    end)
+    Shards.execute(Mix.Tasks.Ecto.Load, args)
   end
 end

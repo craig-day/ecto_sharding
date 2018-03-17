@@ -1,13 +1,9 @@
 defmodule Mix.Tasks.Shards.Drop do
-  use Mix.Task
-  alias Mix.Tasks.Shards
-  alias EctoSharding.Configuration, as: Config
+  @moduledoc "A wrapper around Ecto Mix Tasks that drops the sharded databases."
+  use Mix.Tasks.Shards
 
-  @doc "Drops the Shard DB's"
+  @doc "Drops the Shard DB's.  Accepts the same arguments as Ecto does."
   def run(args \\ []) do
-    Enum.each(Config.shard_repos(), fn({_name, repo}) ->
-      Shards.set_repo(repo, args)
-      |> Mix.Tasks.Ecto.Drop.run()
-    end)
+    Shards.execute(Mix.Tasks.Ecto.Drop, args)
   end
 end

@@ -1,14 +1,9 @@
 defmodule Mix.Tasks.Shards.Create do
-  @moduledoc ""
-  use Mix.Task
-  alias Mix.Tasks.Shards
-  alias EctoSharding.Configuration, as: Config
+  @moduledoc "A wrapper around Ecto Mix Tasks that creates the sharded databases."
+  use Mix.Tasks.Shards
 
-  @doc "Creates the Shard DB's"
+  @doc "Creates the Shard DB's.  Accepts the same arguments as Ecto does."
   def run(args \\ []) do
-    Enum.each(Config.shard_repos(), fn({_name, repo}) ->
-      Shards.set_repo(repo, args)
-      |> Mix.Tasks.Ecto.Create.run()
-    end)
+    Shards.execute(Mix.Tasks.Ecto.Create, args)
   end
 end

@@ -1,15 +1,10 @@
 defmodule Mix.Tasks.Shards.Dump do
-  use Mix.Task
-  alias Mix.Tasks.Shards
-  alias EctoSharding.Configuration, as: Config
+  @moduledoc "A wrapper around Ecto Mix Tasks that dumps the sharded database schema to a file."
+  use Mix.Tasks.Shards
 
-  @doc "Dumps the schema for the Shard DB's"
+  @doc "Dumps the schema for the Shard DB's.  Accepts the same arguments as Ecto does."
   # Note: we only do the first one because all shards carry the same migrations
   def run(args \\ []) do
-    Config.shard_repos()
-    |> Map.values
-    |> List.first
-    |> Shards.set_repo(args)
-    |> Mix.Tasks.Ecto.Dump.run
+    Shards.execute(Mix.Tasks.Ecto.Dump, args)
   end
 end
