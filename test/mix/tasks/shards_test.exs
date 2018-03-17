@@ -4,7 +4,7 @@ defmodule Mix.Tasks.Shards.Test do
   alias Mix.Tasks.Ecto
   alias EctoSharding.ShardRegistry
 
-  setup do
+  setup_all do
     shard_repos = %{
       1 => EctoSharding.Repos.Shard_1,
       2 => EctoSharding.Repos.Shard_2
@@ -67,4 +67,29 @@ defmodule Mix.Tasks.Shards.Test do
       assert called Ecto.Gen.Migration.run(["add_column_to_table", "--repo", "Elixir.EctoSharding.Repos.Shard_1"])
     end
   end
+
+  describe "execute" do
+    test "with Mix.Tasks.Ecto.Dump" do
+      with_mock Ecto.Dump, [run: fn(_args) -> :ok end] do
+        Mix.Tasks.Shards.execute(Mix.Tasks.Ecto.Dump, [])
+        assert called Ecto.Dump.run(["--repo", "Elixir.EctoSharding.Repos.Shard_1"])
+      end
+    end
+
+    test "with Mix.Tasks.Ecto.Gen.Migration" do
+      with_mock Ecto.Gen.Migration, [run: fn(_args) -> :ok end] do
+        Mix.Tasks.Shards.execute(Mix.Tasks.Ecto.Gen.Migration, ["add_column_to_table"])
+        assert called Ecto.Gen.Migration.run(["add_column_to_table", "--repo", "Elixir.EctoSharding.Repos.Shard_1"])
+      end
+    end
+
+    test "with any other task" do
+      with_mock Ecto.Create, [run: fn(_args) -> :ok end] do
+        Mix.Tasks.Shards.execute(Mix.Tasks.Ecto.Create, [])
+        assert called Ecto.Create.run(["--repo", "Elixir.EctoSharding.Repos.Shard_2"])
+        assert called Ecto.Create.run(["--repo", "Elixir.EctoSharding.Repos.Shard_1"])
+      end
+    end
+  end
+
 end
