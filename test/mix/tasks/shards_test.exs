@@ -2,17 +2,6 @@ defmodule Mix.Tasks.Shards.Test do
   use ExUnit.Case, async: false
   import ExMock
   alias Mix.Tasks.Ecto
-  alias EctoSharding.ShardRegistry
-
-  setup_all do
-    shard_repos = %{
-      1 => EctoSharding.Repos.Shard_1,
-      2 => EctoSharding.Repos.Shard_2
-    }
-
-    {:ok, _} = start_supervised {ShardRegistry, [shard_repos: shard_repos]}
-    :ok
-  end
 
   describe "create" do
     test "create/0" do
