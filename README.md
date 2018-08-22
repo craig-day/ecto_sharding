@@ -1,4 +1,4 @@
-# EctoSharding
+# EctoSharding HALLO
 
 [![Build Status](https://travis-ci.org/craig-day/ecto_sharding.svg?branch=v0.0.6)](https://travis-ci.org/craig-day/ecto_sharding) [![Coverage Status](https://coveralls.io/repos/github/craig-day/ecto_sharding/badge.svg?branch=craig-day%2Fcoveralls)](https://coveralls.io/github/craig-day/ecto_sharding?branch=craig-day%2Fcoveralls)
 
